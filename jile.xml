@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Suite">
+	<parameter name="URL" value="https://t11791.jile.io"></parameter>
+	<parameter name="Mail" value="tes.tjile3@gmail.com"></parameter>
+	<parameter name="Password" value="Pass@123"></parameter>
+
+	<test thread-count="5" name="Test" verbose="2">
+		<classes>
+			<class name="jile.Constraints" />
+	
+		</classes>
+	</test> <!-- Test -->
+</suite> <!-- Suite -->
