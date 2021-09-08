@@ -12,14 +12,14 @@ import org.testng.annotations.Test;
 
 public class Constraints extends BaseClass {
 
-	@Test
+	@Test(priority = 1)
 	public void addApp() throws InterruptedException {
 		WebElement mouse = driver.findElementById("kt_aside_toggler");
 		Actions builder = new Actions(driver);
 		builder.moveToElement(mouse).perform();
 		Thread.sleep(20000);
 		// to click configure menu
-		driver.findElement(By.id("configureMenu")).click();
+		driver.findElement(By.xpath("//span[text()='CONFIGURE MENU']")).click();
 		// to click second app group
 		driver.findElement(By.xpath("((//a[@class='kt-menu__link kt-menu__toggle'])[2]//span)[1]")).click();
 		// click +App to go to app browser
@@ -28,6 +28,7 @@ public class Constraints extends BaseClass {
 		// click product in app browser
 		driver.findElement(By.xpath("(//span[text()='Product'])[32]")).click();
 		// click constraints
+		Thread.sleep(500);
 		driver.findElement(By.xpath("(//span[text()='Constraints'])[2]")).click();
 		// click on add button
 		driver.findElement(By.xpath("(//button[text()='Add'])[11]")).click();
@@ -56,29 +57,19 @@ public class Constraints extends BaseClass {
 		Select type = new Select(Type);
 		type.selectByVisibleText("Rules");
 		// enter description
-		driver.findElement(By.xpath("//div[@data-placeholder='Enter the description']")).sendKeys("Constraint added thruogh automation 1");
+		driver.findElement(By.xpath("//div[@data-placeholder='Enter the description']"))
+				.sendKeys("Constraint added thruogh automation 1");
 		// click submit
 		driver.findElement(By.xpath("(//button[@type='submit'])[12]")).click();
 		// get added entity details
 		WebElement newtable = driver.findElement(By.id("businessTable"));
 		List<WebElement> rows = newtable.findElements(By.tagName("tr"));
 		int newdata = rows.size();
-		for (int i =(newdata-2); i <newdata ; i++) {
-			WebElement rowdata = rows.get(i);
-			System.out.println("Details of new constraint : " + rowdata.getText());
-
-		}
+		WebElement rowdata = rows.get(newdata - 1);
+		System.out.println("Details of new constraint : " + rowdata.getText());
 	}
 
-	/*
-	 * @DataProvider public String[][] addData() { String[][] data1 = new
-	 * String[2][2]; data1[0][0] = ""; data1[0][1] =
-	 * "Constraint added thruogh automation 1";
-	 * 
-	 * data1[1][0] = "Automate constarints 2"; data1[1][1] =
-	 * "Constraint added thruogh automation 2"; return data1; }
-	 * 
-	 */	@Test(enabled=false)
+	@Test(enabled = true, priority = 2)
 	public void edit() throws InterruptedException {
 		// click on second entity quick edit
 		Thread.sleep(8000);
@@ -92,18 +83,20 @@ public class Constraints extends BaseClass {
 		driver.findElement(By.xpath("(//input[@id='folderName'])[2]")).sendKeys(" Added and edited");
 		// click submit to save changes
 		driver.findElement(By.xpath("(//button[@type='submit'])[12]")).click();
+		System.out.println("Constraint Edited Successfully");
 	}
 
-	@Test(enabled=false)
+	@Test(enabled = true, priority = 3)
 	public void delete() throws InterruptedException {
 		// delete first constraint in page
 		Thread.sleep(8000);
 		driver.findElement(By.xpath("(//table[@id='businessTable']//tr[2]/td[6]//i)[2]")).click();
 		// yes to confirm
 		driver.findElement(By.xpath("//button[text()='Yes']")).click();
+		System.out.println("Constraint Deleted Successfully");
 	}
 
-	@Test(enabled=false)
+	@Test(enabled = true, priority = 4)
 	public void filters() throws InterruptedException {
 		// click filters
 		Thread.sleep(7000);
@@ -116,6 +109,7 @@ public class Constraints extends BaseClass {
 		// click apply
 		driver.findElement(By.xpath("(//button[text()='Apply'])[2]")).click();
 		Thread.sleep(5000);
+		System.out.println("*****FILTER RESULTS*****");
 		// check result
 		WebElement table1 = driver.findElement(By.id("businessTable"));
 		List<WebElement> row1 = table1.findElements(By.tagName("tr"));
@@ -126,13 +120,27 @@ public class Constraints extends BaseClass {
 		Thread.sleep(800);
 	}
 
-	@Test(enabled=false)
+	@Test(enabled = true, priority = 5)
+	public void removeFilter() throws InterruptedException {
+		// click filter
+		driver.findElement(By.xpath("(//i[@class='fa fa-filter'])[2]")).click();
+		// click clear
+		Thread.sleep(800);
+		driver.findElement(By.xpath("(//i[@class='fa fa-ban text-danger'])[3]")).click();
+		// click apply
+		Thread.sleep(800);
+		driver.findElement(By.xpath("(//button[text()='Apply'])[2]")).click();
+	}
+
+	@Test(enabled = true, priority = 6)
 	public void negative() throws InterruptedException {
 		// click new constraint
+		Thread.sleep(8000);
 		driver.findElement(By.id("constraints_business_grid")).click();
 		Thread.sleep(9000);
 		// click submit
 		driver.findElement(By.xpath("(//button[@type='submit'])[12]")).click();
+		Thread.sleep(1000);
 		// verify error message and click ok
 		String errorMessage = driver.findElement(By.xpath("//div[@class=' modal-alert-body-msg ']/div")).getText();
 		System.out.println("Constraint Quick Add Error: " + errorMessage);
@@ -140,22 +148,21 @@ public class Constraints extends BaseClass {
 		// close quick add screen
 		Thread.sleep(500);
 		driver.findElement(By.id("constraints-modal-cancel-btn")).click();
-		// quick edit
-		driver.findElement(By.xpath("//i[@class='fa fa-pencil text-green']")).click();
 		Thread.sleep(500);
-		// remove title
-		WebElement title = driver.findElement(By.xpath("(//input[@id='folderName'])[2]"));
-		title.clear();
-		Thread.sleep(600);
-		// click submit
-		driver.findElement(By.xpath("(//button[@type='submit'])[12]")).click();
-		// verify error
-		String editerror = driver.findElement(By.xpath("//div[@class=' modal-alert-body-msg ']/div")).getText();
-		System.out.println("Quick edit error: " + editerror);
-		driver.findElement(By.xpath("(//button[text()='OK'])[1]")).click();
-		// close quick edit screen
-		driver.findElement(By.id("constraints-modal-cancel-btn")).click();
-		driver.findElement(By.xpath("//button[text()='Yes']")).click();
-
+		/*
+		 * // quick edit
+		 * driver.findElement(By.xpath("//i[@class='fa fa-pencil text-green']")).click()
+		 * ; Thread.sleep(5000); // remove title WebElement title =
+		 * driver.findElement(By.xpath("(//input[@id='folderName'])[2]"));
+		 * title.clear(); Thread.sleep(2000); // click submit
+		 * driver.findElement(By.xpath("(//button[@type='submit'])[12]")).click();
+		 * Thread.sleep(1000); // verify error String editerror =
+		 * driver.findElement(By.xpath("//div[@class=' modal-alert-body-msg ']/div")).
+		 * getText(); System.out.println("Quick edit error: " + editerror);
+		 * driver.findElement(By.xpath("(//button[text()='OK'])[1]")).click(); // close
+		 * quick edit screen
+		 * driver.findElement(By.id("constraints-modal-cancel-btn")).click();
+		 * driver.findElement(By.xpath("//button[text()='Yes']")).click();
+		 */
 	}
 }
